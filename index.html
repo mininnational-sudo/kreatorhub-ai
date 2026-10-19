@@ -2,7 +2,7 @@
 <html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KreatorHub — AI Story Generator, 1.000 Ide Konten & Tools Direktori</title>
   
   <!-- Verifikasi Google Search Console -->
@@ -87,6 +87,9 @@
       </div>
 
       <div class="flex items-center gap-2.5">
+        <a href="/video-generator" class="hidden md:inline-flex text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-500 text-black hover:bg-amber-400 transition">
+          🎥 Video AI
+        </a>
         <a href="#ai-story-generator" class="hidden md:inline-flex text-xs font-semibold px-3 py-1.5 rounded-lg bg-neutral-900 text-neutral-300 hover:text-white border border-neutral-800 transition">
           🎬 AI Cerita Video
         </a>
@@ -104,7 +107,7 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+  <main class="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8 space-y-12">
 
     <!-- Hero Title -->
     <section class="text-center max-w-3xl mx-auto pt-2">
@@ -117,6 +120,10 @@
       <p class="text-neutral-400 text-xs md:text-base leading-relaxed max-w-2xl mx-auto">
         Platform terlengkap untuk kreator YouTube, TikTok & Reels. Ubah ide/link jadi cerita video sinematik, acak formula viral, dan temukan ratusan resource gratis.
       </p>
+      <div class="mt-6 grid grid-cols-2 gap-3 max-w-md mx-auto">
+        <a href="/video-generator" class="py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-700 text-black text-xs md:text-sm font-extrabold">🎬 Buat Video AI</a>
+        <a href="#ai-story-generator" class="py-3.5 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-100 text-xs md:text-sm font-bold">📝 Buat Cerita AI</a>
+      </div>
     </section>
 
     <!-- Top Responsive Ad Slot (728x90) -->
@@ -391,6 +398,16 @@
       </div>
     </div>
   </footer>
+
+  <!-- Navigasi bawah (HP) -->
+  <nav class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Menu utama">
+    <div class="grid grid-cols-4 h-14 text-[10px] font-semibold">
+      <a href="/" class="flex flex-col items-center justify-center gap-0.5 text-amber-400"><span class="text-base">🏠</span>Beranda</a>
+      <a href="/video-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🎬</span>Video AI</a>
+      <a href="#ai-story-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">📝</span>Story AI</a>
+      <button type="button" onclick="notify('Login dan saldo kredit segera hadir.','👤')" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">👤</span>Akun</button>
+    </div>
+  </nav>
 
   <!-- Application Logic -->
   <script>

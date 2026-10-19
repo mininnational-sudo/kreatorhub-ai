@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Video Generator — KreatorHub</title>
+  <meta name="google-site-verification" content="KCP7oIVcMGBj-562M0-17TOQTb08VqAHyn9xyszXQQ0" />
+  <meta name="description" content="Buat video AI dari teks atau gambar langsung dari HP. Lihat biaya kredit sebelum generate.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } } } }</script>
+  <style>
+    .pill[aria-pressed="true"], .pill[aria-checked="true"] { background:#f59e0b; color:#000; border-color:#f59e0b; }
+    .pill:disabled { opacity:.45; cursor:not-allowed; }
+    .pb-bars { padding-bottom: calc(9.5rem + env(safe-area-inset-bottom)); }
+    .bar-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    summary::-webkit-details-marker { display:none; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 min-h-screen font-sans">
+
+  <header class="sticky top-0 z-30 border-b border-neutral-800/80 bg-neutral-950/90 backdrop-blur">
+    <div class="max-w-xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="/" class="font-extrabold text-lg tracking-tight">Kreator<span class="text-amber-500">Hub</span></a>
+      <span class="text-[11px] text-neutral-400">Saldo: <b id="balanceTop" class="text-neutral-200">—</b></span>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto px-4 pt-5 pb-bars space-y-6">
+    <div>
+      <h1 class="text-xl font-extrabold">AI Video Generator</h1>
+      <p class="text-xs text-neutral-400 mt-1">Tulis adegan atau unggah gambar, pilih durasi, lalu generate. Biaya terlihat sebelum proses dimulai.</p>
+    </div>
+
+    <section aria-labelledby="l-model" class="space-y-2">
+      <h2 id="l-model" class="text-xs font-bold text-neutral-300">Model</h2>
+      <div id="modelList" class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="l-model"></div>
+    </section>
+
+    <section aria-labelledby="l-method" class="space-y-2">
+      <h2 id="l-method" class="text-xs font-bold text-neutral-300">Cara membuat</h2>
+      <div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="l-method">
+        <button type="button" role="radio" aria-checked="true" data-method="text" class="pill py-3 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-bold">Teks ke Video</button>
+        <button type="button" role="radio" aria-checked="false" data-method="image" class="pill py-3 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-bold">Gambar ke Video</button>
+      </div>
+      <p class="text-[11px] text-neutral-500">Referensi ke Video menyusul di versi berikutnya.</p>
+    </section>
+
+    <section id="imageBox" class="hidden space-y-2">
+      <label for="imgInput" class="text-xs font-bold text-neutral-300">Gambar awal</label>
+      <input id="imgInput" type="file" accept="image/jpeg,image/png,image/webp" class="block w-full text-xs text-neutral-300 file:mr-3 file:rounded-lg file:border-0 file:bg-amber-500 file:px-4 file:py-2 file:font-bold file:text-black">
+      <img id="imgPreview" alt="Pratinjau gambar awal" class="hidden w-full max-h-56 object-contain rounded-xl border border-neutral-800 bg-neutral-900">
+    </section>
+
+    <section class="space-y-2">
+      <label for="prompt" class="text-xs font-bold text-neutral-300">Prompt video</label>
+      <textarea id="prompt" rows="5" maxlength="2000" placeholder="Contoh: Astronot berjalan di gurun merah saat badai debu, kamera bergerak pelan dari belakang, cahaya senja sinematik." class="w-full p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs leading-relaxed placeholder-neutral-600 focus:border-amber-500 outline-none"></textarea>
+      <a href="/#ai-story-generator" class="inline-block text-[11px] text-amber-400 underline">Bingung menulis prompt? Buat dengan AI Story</a>
+    </section>
+
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <label for="dur" class="text-xs font-bold text-neutral-300">Durasi</label>
+        <b id="durLabel" class="text-xs text-amber-400">5 detik</b>
+      </div>
+      <input id="dur" type="range" min="3" max="15" step="1" value="5" class="w-full accent-amber-500">
+      <div>
+        <h2 class="text-xs font-bold text-neutral-300 mb-2">Rasio</h2>
+        <div id="ratioList" class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Rasio video"></div>
+      </div>
+    </section>
+
+    <details class="rounded-xl border border-neutral-800 bg-neutral-900/60">
+      <summary class="cursor-pointer p-3.5 text-xs font-bold text-neutral-300 flex justify-between">Pengaturan lanjutan <span class="text-neutral-500">Resolusi, audio, variasi</span></summary>
+      <div class="px-3.5 pb-3.5 text-[11px] text-neutral-400">Pilihan ini muncul setelah model dan penyedia API memastikan dukungannya. Pengaturan yang tidak didukung tidak ditampilkan agar tidak membingungkan.</div>
+    </details>
+
+    <section id="resultBox" class="hidden space-y-3" aria-live="polite">
+      <h2 class="text-xs font-bold text-neutral-300">Hasil</h2>
+      <div id="statusLine" class="text-xs text-neutral-300"></div>
+      <div class="h-1.5 rounded-full bg-neutral-800 overflow-hidden"><div id="statusBar" class="h-full w-1/3 bg-amber-500 animate-pulse"></div></div>
+      <video id="resultVideo" controls playsinline class="hidden w-full rounded-xl border border-neutral-800 bg-black"></video>
+      <a id="resultDl" target="_blank" rel="noopener" download class="hidden text-center block py-3 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-bold">Unduh video</a>
+      <p id="resultNote" class="hidden text-[11px] text-neutral-500">Tautan hasil dari penyedia bisa kedaluwarsa. Unduh videonya segera.</p>
+    </section>
+  </main>
+
+  <!-- Bar biaya: selalu terlihat di atas navigasi bawah -->
+  <div class="fixed inset-x-0 bottom-14 z-30 border-t border-neutral-800 bg-neutral-950/95 backdrop-blur bar-bottom-spacer" style="bottom:calc(3.5rem + env(safe-area-inset-bottom))">
+    <div class="max-w-xl mx-auto px-4 py-2.5 flex items-center gap-3">
+      <div class="flex-1 text-[11px] leading-tight">
+        <div class="text-neutral-400">Biaya <b id="costVal" class="text-neutral-100">0</b> kredit</div>
+        <div class="text-neutral-400">Saldo <b id="balanceVal" class="text-neutral-100">—</b></div>
+      </div>
+      <button id="btnGen" type="button" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-700 text-black text-xs font-extrabold disabled:opacity-50">Generate video</button>
+    </div>
+  </div>
+
+  <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950 bar-bottom" aria-label="Menu utama">
+    <div class="max-w-xl mx-auto grid grid-cols-4 h-14 text-[10px] font-semibold">
+      <a href="/" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🏠</span>Beranda</a>
+      <a href="/video-generator" aria-current="page" class="flex flex-col items-center justify-center gap-0.5 text-amber-400"><span class="text-base">🎬</span>Video AI</a>
+      <a href="/#ai-story-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">📝</span>Story AI</a>
+      <button type="button" id="navAccount" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">👤</span>Akun</button>
+    </div>
+  </nav>
+
+  <div id="toast" role="status" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 hidden max-w-[90%] bg-neutral-900 border border-amber-500/40 px-4 py-2 rounded-full text-xs font-semibold shadow-xl"></div>
+
+<script>
+  // ---- KONFIGURASI (ubah di sini) ----
+  // Harga di bawah adalah ANGKA SEMENTARA untuk tampilan. Hitung ulang dari harga API-mu (1 kredit = Rp100).
+  // Saat kredit sungguhan aktif, biaya final harus dihitung dan dipotong di server, bukan di halaman ini.
+  const MODELS = [
+    { id: 'seedance-2.0-fast', name: 'Seedance 2.0 Fast', note: 'Utama · 4–15 detik', enabled: true, maxSec: 15, minSec: 4, creditPerSec: 0 },
+    { id: 'seedance-2.5', name: 'Seedance 2.5', note: 'Segera hadir', enabled: false, maxSec: 30, minSec: 4, creditPerSec: 0 }
+  ];
+  const RATIOS = ['16:9', '9:16', '1:1'];
+  const ENDPOINT = '/.netlify/functions/seedance';
+  const BALANCE = null; // null = login & kredit belum aktif
+
+  const st = { model: MODELS[0], method: 'text', ratio: '9:16', image: null, busy: false };
+  const $ = (id) => document.getElementById(id);
+
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add('hidden'), 2800); }
+
+  function renderChoices() {
+    $('modelList').innerHTML = '';
+    MODELS.forEach(m => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'radio'); b.disabled = !m.enabled;
+      b.setAttribute('aria-checked', String(m.id === st.model.id));
+      b.className = 'pill p-3 rounded-xl border border-neutral-800 bg-neutral-900 text-left';
+      b.innerHTML = '<div class="text-xs font-bold"></div><div class="text-[10px] opacity-70 mt-0.5"></div>';
+      b.children[0].textContent = m.name; b.children[1].textContent = m.note;
+      b.onclick = () => { st.model = m; $('dur').max = m.maxSec; renderChoices(); update(); };
+      $('modelList').appendChild(b);
+    });
+    $('ratioList').innerHTML = '';
+    RATIOS.forEach(r => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(r === st.ratio));
+      b.className = 'pill py-2.5 rounded-xl border border-neutral-800 bg-neutral-900 text-xs font-bold'; b.textContent = r;
+      b.onclick = () => { st.ratio = r; renderChoices(); };
+      $('ratioList').appendChild(b);
+    });
+  }
+
+  function cost() { return st.model.creditPerSec > 0 ? Number($('dur').value) * st.model.creditPerSec : null; }
+  function update() {
+    $('dur').min = st.model.minSec || 4;
+    if (Number($('dur').value) < Number($('dur').min)) $('dur').value = $('dur').min;
+    $('durLabel').textContent = $('dur').value + ' detik';
+    $('costVal').textContent = cost() === null ? 'Belum dihitung' : cost();
+    const bal = BALANCE === null ? '—' : BALANCE;
+    $('balanceVal').textContent = bal; $('balanceTop').textContent = bal;
+  }
+
+  document.querySelectorAll('[data-method]').forEach(b => b.onclick = () => {
+    if (b.dataset.method === 'image') { toast('Image-to-Video menyusul setelah penyimpanan gambar aman disiapkan.'); return; }
+    st.method = b.dataset.method;
+    document.querySelectorAll('[data-method]').forEach(x => x.setAttribute('aria-checked', String(x === b)));
+    $('imageBox').classList.toggle('hidden', st.method !== 'image');
+  });
+  $('dur').oninput = update;
+  $('navAccount').onclick = () => toast('Login dan saldo kredit segera hadir.');
+
+  // Perkecil gambar di browser supaya muat dalam batas ukuran request.
+  $('imgInput').onchange = (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const url = URL.createObjectURL(f), img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 1280 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      st.image = c.toDataURL('image/jpeg', 0.85);
+      $('imgPreview').src = st.image; $('imgPreview').classList.remove('hidden');
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = () => { toast('Gambar tidak bisa dibaca.'); st.image = null; };
+    img.src = url;
+  };
+
+  async function api(payload) {
+    const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || `Permintaan gagal (${r.status}).`);
+    return d;
+  }
+
+  function showStatus(text, failed) {
+    $('resultBox').classList.remove('hidden');
+    $('statusLine').textContent = text;
+    $('statusLine').className = 'text-xs ' + (failed ? 'text-red-400' : 'text-neutral-300');
+    $('statusBar').classList.toggle('hidden', !!failed);
+  }
+
+  $('btnGen').onclick = async () => {
+    if (st.busy) return;
+    const prompt = $('prompt').value.trim();
+    if (!prompt) { toast('Tulis prompt video dulu.'); $('prompt').focus(); return; }
+    if (st.method === 'image') { toast('Image-to-Video belum aktif.'); return; }
+    st.busy = true; $('btnGen').disabled = true;
+    $('resultVideo').classList.add('hidden'); $('resultDl').classList.add('hidden'); $('resultNote').classList.add('hidden');
+    showStatus('Mengirim permintaan…');
+    try {
+      const { id } = await api({ action: 'create', model: st.model.id, prompt, duration: Number($('dur').value), ratio: st.ratio, image: st.method === 'image' ? st.image : null });
+      showStatus('Video sedang dibuat. Biasanya butuh beberapa menit, jangan tutup halaman ini.');
+      const t0 = Date.now();
+      while (Date.now() - t0 < 10 * 60 * 1000) {
+        await new Promise(r => setTimeout(r, 5000));
+        const s = await api({ action: 'status', id });
+        if (s.state === 'failed') throw new Error(s.error || 'Pembuatan video gagal.');
+        if (s.state === 'done') {
+          if (!s.url) throw new Error('Video selesai, tetapi tautan hasil tidak tersedia.');
+          showStatus('Video siap.');
+          $('statusBar').classList.add('hidden');
+          $('resultVideo').src = s.url; $('resultVideo').classList.remove('hidden');
+          $('resultDl').href = s.url; $('resultDl').classList.remove('hidden'); $('resultNote').classList.remove('hidden');
+          return;
+        }
+      }
+      throw new Error('Proses terlalu lama. Coba lagi nanti.');
+    } catch (err) {
+      showStatus(err.message || 'Terjadi kesalahan.', true);
+    } finally { st.busy = false; $('btnGen').disabled = false; }
+  };
+
+  renderChoices(); update();
+</script>
+</body>
+</html>

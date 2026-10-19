@@ -29,3 +29,34 @@ STATUS PENGUJIAN
 - Pemeriksaan sintaks JavaScript untuk ketiga Netlify Functions dan skrip inline HTML lulus.
 - Ini belum merupakan uji end-to-end terhadap akun Netlify/Google API pengguna. Upload resumable, analisis video, dan audio TTS tetap harus diuji setelah deploy.
 - Jangan deploy sebelum meninjau perubahan dan memahami batasan di atas.
+
+=== TAMBAHAN: AI VIDEO GENERATOR (SEEDANCE) ===
+FILE BARU
+- video-generator.html: halaman /video-generator (HP dulu): model, Teks/Gambar ke Video, prompt, durasi, rasio, bar biaya + Generate, hasil + unduh.
+- netlify/functions/seedance.mjs: adapter API video. Ada tanda "SESUAIKAN": path & nama field HARUS dicocokkan dengan dokumentasi penyedia API.
+- netlify.toml: ditambah redirect /video-generator.
+- index.html: hanya ditambah tombol Buat Video AI/Cerita AI di hero, link header, dan navigasi bawah (HP). Meta Google dipertahankan.
+
+ENVIRONMENT VARIABLES BARU (Netlify)
+- SEEDANCE_API_KEY, SEEDANCE_API_BASE (wajib)
+- SEEDANCE_CREATE_PATH, SEEDANCE_STATUS_PATH (opsional; default /videos dan /videos/{id})
+- VIDEO_GEN_ENABLED=true  -> TANPA ini generator menolak semua permintaan (aman by default).
+
+BELUM ADA / JANGAN DIJUAL DULU
+- Login, saldo kredit, dan pemotongan kredit di server belum ada. Selama VIDEO_GEN_ENABLED=true, SIAPA PUN yang membuka situs bisa memakai API-mu dan memakai uangmu. Aktifkan hanya untuk uji sendiri, lalu matikan lagi.
+- Angka kredit di video-generator.html (creditPerSec) adalah angka sementara, belum dihitung dari harga API.
+- Seedance 2.5 tampil nonaktif ("Segera hadir").
+- Belum diuji end-to-end terhadap API Seedance; hanya pemeriksaan sintaks.
+
+
+=== PEMBARUAN ADAPTER BYTEPLUS MODELARK ===
+- netlify/functions/seedance.mjs kini menggunakan endpoint resmi ModelArk untuk membuat dan memeriksa tugas video.
+- Model ID Seedance 2.0 Fast: dreamina-seedance-2-0-fast-260128.
+- Environment Variables yang diperlukan: SEEDANCE_API_KEY dan VIDEO_GEN_ENABLED. Jangan buat SEEDANCE_API_BASE; endpoint resmi sudah ditetapkan dalam backend.
+- VIDEO_GEN_ENABLED harus tetap tidak diatur atau bernilai false sampai admin siap melakukan uji pribadi. Untuk uji pribadi, set ke true sementara lalu matikan kembali.
+- API Key hanya disimpan di Netlify Environment Variables, jangan di HTML dan jangan kirim lewat chat.
+- Generator saat ini mengirim Text-to-Video pada resolusi 720p, rasio 16:9 / 9:16 / 1:1, audio aktif dan watermark aktif. Durasi yang dikirim 4–15 detik.
+- Image-to-Video belum aktif karena upload gambar perlu penyimpanan asset yang aman dan URL yang dapat diakses penyedia API. Seedance 2.5 tetap ditampilkan sebagai Segera hadir dan belum diaktifkan.
+- Estimasi kredit dinonaktifkan (Belum dihitung); angka lama bukan harga resmi. Login, database, saldo kredit dan potongan saldo belum dibuat. Jangan buka untuk publik atau jual kredit sebelum fitur tersebut tersedia.
+- Alur resmi: POST /api/v3/contents/generations/tasks untuk membuat tugas, lalu GET /api/v3/contents/generations/tasks/{id} untuk memeriksa status. URL video hasil berlaku terbatas; simpan hasil ke storage sendiri bila diperlukan.
+- Status pemeriksaan: kode disesuaikan dengan dokumentasi BytePlus ModelArk, tetapi belum diuji end-to-end karena tidak ada API key/akun pengguna yang tersambung.

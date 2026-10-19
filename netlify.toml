@@ -4,3 +4,8 @@
 
 [functions]
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/video-generator"
+  to = "/video-generator.html"
+  status = 200
