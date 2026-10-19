@@ -25,4 +25,3 @@ export default async (request) => {
     return reply({ audioBase64: part.inlineData.data, mimeType: part.inlineData.mimeType || 'audio/pcm;rate=24000', model, voiceName });
   } catch { return reply({ error: 'Tidak dapat menghubungi layanan suara Gemini.' }, 502); }
 };
-
