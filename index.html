@@ -234,9 +234,9 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xl">🎲</span>
-            <h2 class="text-lg md:text-xl font-bold text-neutral-100">Generator 1.000 Kombinasi Ide Konten & Viral Hook</h2>
+            <h2 class="text-lg md:text-xl font-bold text-neutral-100">Generator 1.000+ Ide Konten dengan AI</h2>
           </div>
-          <p class="text-xs text-neutral-400 mt-0.5">Buntu ide? Acak kombinasi konsep dan hook dari bank ide lokal. Konten bukan hasil AI.</p>
+          <p class="text-xs text-neutral-400 mt-0.5">Setiap klik meminta AI membuat ide baru sesuai kategori—bukan sekadar mengacak kombinasi template.</p>
         </div>
         <div class="flex items-center gap-2">
           <select id="ideaCategoryFilter" class="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-neutral-200 outline-none focus:border-amber-500">
@@ -248,7 +248,7 @@
             <option value="tutorial">Tips Editing & Hook</option>
           </select>
           <button onclick="rollRandomIdea()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/10 transition">
-            <span>🎲</span> Acak Ide
+            <span>✨</span> Buat Ide AI
           </button>
         </div>
       </div>
@@ -399,12 +399,16 @@
     </div>
   </footer>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="auth.js"></script>
   <!-- Navigasi bawah (HP) -->
   <nav class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Menu utama">
-    <div class="grid grid-cols-4 h-14 text-[10px] font-semibold">
+    <div class="grid grid-cols-5 h-14 text-[10px] font-semibold">
       <a href="/" class="flex flex-col items-center justify-center gap-0.5 text-amber-400"><span class="text-base">🏠</span>Beranda</a>
       <a href="/video-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🎬</span>Video AI</a>
       <a href="/story" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">📝</span>Story AI</a>
+      <a href="/chat" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">💬</span>Chat</a>
       <button type="button" onclick="location.href='/video-generator#/akun'" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">👤</span>Akun</button>
     </div>
   </nav>
@@ -622,41 +626,36 @@ Cinematic documentary screengrab, hyper-realistic, dramatic rim lighting, myster
       }
     ];
 
-    // Expand bank to 1,000 distinct local idea combinations (not AI-generated).
-    (function expandIdeaBankTo1000() {
-      const settings = ['di kota yang ditinggalkan', 'di hutan berkabut', 'di stasiun luar angkasa', 'di desa terpencil', 'di pulau tanpa peta', 'di gedung bawah tanah', 'di masa depan', 'di kerajaan kuno', 'di laboratorium rahasia', 'di tengah badai'];
-      const twists = ['namun semua bukti menghilang saat fajar', 'hingga satu rekaman mengubah semuanya', 'tetapi tokoh utama menyimpan rahasia', 'sampai waktu mulai berjalan mundur', 'dan ternyata petunjuknya ada sejak awal', 'sebelum pesan terakhir datang', 'ketika orang yang dipercaya menghilang', 'saat aturan dunia mendadak berubah', 'namun akhir ceritanya tidak seperti dugaan', 'hingga pilihan terakhir menentukan nasib semua orang'];
-      const angles = ['Misteri', 'Eksperimen', 'Misi penyelamatan', 'Rahasia keluarga', 'Survival', 'Penemuan aneh', 'Konspirasi', 'Perjalanan waktu', 'Dunia paralel', 'Teknologi terlarang'];
-      const base = ideaDatabase.slice();
-      for (let n = 1; ideaDatabase.length < 1000; n++) {
-        const seed = base[(n - 1) % base.length];
-        const setting = settings[Math.floor((n - 1) / 10) % settings.length];
-        const twist = twists[(n - 1) % twists.length];
-        const angle = angles[Math.floor((n - 1) / 100) % angles.length];
-        ideaDatabase.push({
-          cat: seed.cat, tag: seed.tag,
-          hook: `"${angle} ${setting} #${String(n).padStart(3, '0')}: ${twist}."`,
-          synopsis: `${seed.synopsis} Latar: ${setting}; konflik berkembang ${twist}.`,
-          script: `"Bayangkan ${angle.toLowerCase()} ${setting}. ${twist}. Apa keputusan yang akan kamu ambil?"`
-        });
-      }
-    })();
+    // Ide baru dibuat oleh Gemini melalui endpoint server; bank kecil di atas hanya contoh awal.
+    const recentIdeas = [];
 
     let currentIdeaObj = ideaDatabase[0];
 
-    function rollRandomIdea() {
+    async function rollRandomIdea() {
+      const button = document.querySelector('#ideaCategoryFilter')?.parentElement?.querySelector('button');
       const cat = document.getElementById('ideaCategoryFilter').value;
-      const matches = cat === 'all' ? ideaDatabase : ideaDatabase.filter(i => i.cat === cat);
-      const pool = matches.length ? matches : ideaDatabase;
-      const chosen = pool[Math.floor(Math.random() * pool.length)];
-      currentIdeaObj = chosen;
-
-      document.getElementById('ideaTagDisplay').textContent = chosen.tag;
-      document.getElementById('ideaHookDisplay').textContent = chosen.hook;
-      document.getElementById('ideaSynopsisDisplay').textContent = chosen.synopsis;
-      document.getElementById('ideaScriptDisplay').textContent = chosen.script;
-
-      notify('Ide baru berhasil diacak!', '🎲');
+      const oldLabel = button ? button.innerHTML : '';
+      if (button) { button.disabled = true; button.innerHTML = '<span>⏳</span> Membuat ide…'; }
+      try {
+        const response = await fetch('/.netlify/functions/ideas', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category: cat, avoid: recentIdeas.slice(-8).join('\n') })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.idea) throw new Error(data.error || `Permintaan gagal (${response.status}).`);
+        const chosen = data.idea;
+        currentIdeaObj = chosen;
+        recentIdeas.push(chosen.hook);
+        document.getElementById('ideaTagDisplay').textContent = chosen.tag;
+        document.getElementById('ideaHookDisplay').textContent = chosen.hook;
+        document.getElementById('ideaSynopsisDisplay').textContent = chosen.synopsis;
+        document.getElementById('ideaScriptDisplay').textContent = chosen.script;
+        notify('Ide baru dibuat oleh AI!', '✨');
+      } catch (err) {
+        notify('Ide AI belum bisa dibuat: ' + (err.message || 'Coba lagi.'), '⚠️');
+      } finally {
+        if (button) { button.disabled = false; button.innerHTML = oldLabel; }
+      }
     }
 
     function copyCurrentIdea() {

@@ -28,11 +28,15 @@
   <a href="/#video-analysis" class="block rounded-2xl bg-neutral-900 border border-neutral-800 p-4 text-xs"><b class="text-sm">Analisis video →</b><br><span class="text-neutral-400">Punya video referensi? Analisis dulu, lalu susun ceritanya di sini.</span></a>
 </main>
 <div id="toast" role="status" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] hidden max-w-[90%] bg-neutral-800 border border-amber-500/40 px-4 py-2 rounded-full text-xs font-semibold"></div>
-<nav class="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Menu utama"><div class="max-w-xl mx-auto grid grid-cols-4 h-14 text-[10px] font-semibold">
+<nav class="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Menu utama"><div class="max-w-xl mx-auto grid grid-cols-5 h-14 text-[10px] font-semibold">
 <a href="/" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🏠</span>Beranda</a>
 <a href="/video-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🎬</span>Video AI</a>
 <a href="/story" aria-current="page" class="flex flex-col items-center justify-center gap-0.5 text-amber-400"><span class="text-base">📝</span>Story AI</a>
+<a href="/chat" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">💬</span>Chat</a>
 <a href="/video-generator#/akun" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">👤</span>Akun</a></div></nav>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="auth.js"></script>
 <script>
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let B=[];
