@@ -48,15 +48,29 @@ BELUM ADA / JANGAN DIJUAL DULU
 - Seedance 2.5 tampil nonaktif ("Segera hadir").
 - Belum diuji end-to-end terhadap API Seedance; hanya pemeriksaan sintaks.
 
+=== UPDATE: TAMPILAN GAYA GOOGLE FLOW ===
+- video-generator.html kini: Daftar Project -> isi project (grid, unggah banyak gambar/video) -> viewer (geser kiri/kanan antar item) -> sheet pengaturan + pilih model.
+- Generate berjalan paralel: tekan generate, geser ke item lain, generate lagi tanpa menunggu yang sebelumnya selesai.
+- Model ada di array MODELS (video-generator.html) dan MODELS (seedance.mjs). Item "Omni 1.1 Flash" mendukung teks/gambar/video; Seedance 2.0 Fast teks/gambar. Sesuaikan dengan kemampuan penyedia API-mu.
+- Data project tersimpan HANYA di browser perangkat ini (IndexedDB). Ganti ke Supabase saat login & kredit dibuat.
+- Video unggahan belum bisa jadi sumber Video ke Video: butuh penyimpanan online agar penyedia bisa mengambil videonya. Sumber yang bisa: gambar, dan video hasil generate.
+- Harga kredit di MODELS adalah angka sementara.
 
-=== PEMBARUAN ADAPTER BYTEPLUS MODELARK ===
-- netlify/functions/seedance.mjs kini menggunakan endpoint resmi ModelArk untuk membuat dan memeriksa tugas video.
-- Model ID Seedance 2.0 Fast: dreamina-seedance-2-0-fast-260128.
-- Environment Variables yang diperlukan: SEEDANCE_API_KEY dan VIDEO_GEN_ENABLED. Jangan buat SEEDANCE_API_BASE; endpoint resmi sudah ditetapkan dalam backend.
-- VIDEO_GEN_ENABLED harus tetap tidak diatur atau bernilai false sampai admin siap melakukan uji pribadi. Untuk uji pribadi, set ke true sementara lalu matikan kembali.
-- API Key hanya disimpan di Netlify Environment Variables, jangan di HTML dan jangan kirim lewat chat.
-- Generator saat ini mengirim Text-to-Video pada resolusi 720p, rasio 16:9 / 9:16 / 1:1, audio aktif dan watermark aktif. Durasi yang dikirim 4–15 detik.
-- Image-to-Video belum aktif karena upload gambar perlu penyimpanan asset yang aman dan URL yang dapat diakses penyedia API. Seedance 2.5 tetap ditampilkan sebagai Segera hadir dan belum diaktifkan.
-- Estimasi kredit dinonaktifkan (Belum dihitung); angka lama bukan harga resmi. Login, database, saldo kredit dan potongan saldo belum dibuat. Jangan buka untuk publik atau jual kredit sebelum fitur tersebut tersedia.
-- Alur resmi: POST /api/v3/contents/generations/tasks untuk membuat tugas, lalu GET /api/v3/contents/generations/tasks/{id} untuk memeriksa status. URL video hasil berlaku terbatas; simpan hasil ke storage sendiri bila diperlukan.
-- Status pemeriksaan: kode disesuaikan dengan dokumentasi BytePlus ModelArk, tetapi belum diuji end-to-end karena tidak ada API key/akun pengguna yang tersambung.
+=== UPDATE: LOGIN + KREDIT DI SERVER ===
+LANGKAH PASANG
+1. Buat project di supabase.com. SQL Editor -> tempel isi supabase/schema.sql -> Run.
+2. Authentication -> Providers: Email aktif. (Opsional: matikan "Confirm email" saat uji.)
+3. Isi config.js: SUPABASE_URL dan SUPABASE_ANON_KEY (anon key boleh publik).
+4. Netlify -> Environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (RAHASIA, jangan ke config.js), SEEDANCE_API_KEY, SEEDANCE_API_BASE, VIDEO_GEN_ENABLED=true.
+5. Daftar di situsmu, lalu isi saldo uji lewat SQL (contoh ada di baris akhir schema.sql).
+CARA KERJA: server memverifikasi login, memotong kredit atomik SEBELUM memanggil penyedia, dan mengembalikan kredit otomatis jika gagal / lewat 20 menit. Pengguna tidak bisa mengubah saldo dari browser.
+HARGA RESMI: PRICE di netlify/functions/seedance.mjs (angka sementara). Harus sama dengan MODELS di video-generator.html.
+BELUM ADA: top-up otomatis (pembayaran), penyimpanan file (video unggahan), sinkron project ke database.
+
+=== UPDATE: HALAMAN & FITUR TAMBAHAN ===
+- /story (story.html): Story AI. Memakai fungsi generate (Gemini) yang sudah ada. Tiap bagian hasil bisa disalin atau "Pakai di Video AI" (prompt otomatis terisi di project berikutnya yang dibuka).
+- /video-generator#/akun: profil, saldo, riwayat kredit (butuh Supabase), keluar/masuk.
+- /video-generator#/antrean: daftar semua pekerjaan generate + status + tombol hapus yang gagal.
+- Ganti nama project: ikon ✎ di dalam project.
+- index.html: tombol Cerita AI & menu bawah -> /story; Akun -> halaman akun. Bagian Story/Analisis/Direktori lama di beranda tetap ada.
+STATUS JUJUR: tombol Generate tetap bisa ditekan, tetapi tanpa Supabase + penyedia video hasilnya "Gagal" dengan alasan jelas dan TIDAK memotong kredit (pemeriksaan login/konfigurasi dilakukan sebelum kredit dipotong).
