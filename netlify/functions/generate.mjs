@@ -1,4 +1,5 @@
-const MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
+import { guard } from './lib/guard.mjs';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 export default async (request) => {
   if (request.method !== 'POST') {
@@ -8,6 +9,7 @@ export default async (request) => {
     });
   }
 
+  const g = await guard(request, 'story', 20, 3600); if (g instanceof Response) return g;
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: 'Backend belum dikonfigurasi: admin perlu mengisi GEMINI_API_KEY di Netlify.' }), {

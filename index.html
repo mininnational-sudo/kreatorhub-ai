@@ -2,7 +2,7 @@
 <html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KreatorHub — AI Story Generator, 1.000 Ide Konten & Tools Direktori</title>
   
   <!-- Verifikasi Google Search Console -->
@@ -87,6 +87,9 @@
       </div>
 
       <div class="flex items-center gap-2.5">
+        <a href="/video-generator" class="hidden md:inline-flex text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-500 text-black hover:bg-amber-400 transition">
+          🎥 Video AI
+        </a>
         <a href="#ai-story-generator" class="hidden md:inline-flex text-xs font-semibold px-3 py-1.5 rounded-lg bg-neutral-900 text-neutral-300 hover:text-white border border-neutral-800 transition">
           🎬 AI Cerita Video
         </a>
@@ -104,7 +107,7 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+  <main class="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8 space-y-12">
 
     <!-- Hero Title -->
     <section class="text-center max-w-3xl mx-auto pt-2">
@@ -117,6 +120,10 @@
       <p class="text-neutral-400 text-xs md:text-base leading-relaxed max-w-2xl mx-auto">
         Platform terlengkap untuk kreator YouTube, TikTok & Reels. Ubah ide/link jadi cerita video sinematik, acak formula viral, dan temukan ratusan resource gratis.
       </p>
+      <div class="mt-6 grid grid-cols-2 gap-3 max-w-md mx-auto">
+        <a href="/video-generator" class="py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-700 text-black text-xs md:text-sm font-extrabold">🎬 Buat Video AI</a>
+        <a href="/story" class="py-3.5 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-100 text-xs md:text-sm font-bold">📝 Buat Cerita AI</a>
+      </div>
     </section>
 
     <!-- Top Responsive Ad Slot (728x90) -->
@@ -205,6 +212,20 @@
       </div>
     </section>
 
+    <!-- FITUR TAMBAHAN: UPLOAD & ANALISIS VIDEO -->
+    <section id="video-analysis" class="rounded-2xl bg-neutral-900/70 border border-emerald-700/50 p-5 md:p-7 space-y-4">
+      <div>
+        <h2 class="text-lg md:text-xl font-bold">🎥 Upload & Analisis Video AI</h2>
+        <p class="text-xs text-neutral-400 mt-1">Pilih video dari HP untuk dianalisis Gemini. Maksimal 5 menit dan 100 MiB per video. Format MP4, WebM, atau MOV.</p>
+      </div>
+      <input id="videoFileInput" type="file" accept="video/mp4,video/webm,video/quicktime" class="block w-full text-xs text-neutral-300 file:mr-3 file:rounded-lg file:border-0 file:bg-amber-500 file:px-4 file:py-2 file:font-bold file:text-black" />
+      <textarea id="videoExtraNotes" rows="2" placeholder="Opsional: gaya recap, target durasi, atau catatan tambahan..." class="w-full p-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-100 text-xs"></textarea>
+      <div class="h-2 rounded-full bg-neutral-800 overflow-hidden"><div id="videoProgressBar" class="h-full bg-emerald-500 transition-all" style="width:0%"></div></div>
+      <p id="videoProgressText" class="text-xs text-neutral-400" aria-live="polite">Belum ada video dipilih.</p>
+      <button id="btnAnalyzeVideo" type="button" onclick="handleAnalyzeVideo()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs disabled:opacity-50">Upload & Analisis Video</button>
+      <div class="rounded-lg border border-amber-800/60 bg-amber-950/20 p-3 text-[11px] text-neutral-300">Video dikirim ke Google Gemini untuk analisis. Setelah analisis, situs meminta penghapusan file dari API Google. Ini bukan jaminan penghapusan dari semua log atau kebijakan retensi pihak ketiga. Jangan unggah video pribadi/sensitif.</div>
+    </section>
+
     <!-- ========================================== -->
     <!-- FITUR 2: GENERATOR 1.000 IDE KONTEN & HOOK -->
     <!-- ========================================== -->
@@ -213,9 +234,9 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xl">🎲</span>
-            <h2 class="text-lg md:text-xl font-bold text-neutral-100">Generator 1.000 Kombinasi Ide Konten & Viral Hook</h2>
+            <h2 class="text-lg md:text-xl font-bold text-neutral-100">Generator 1.000+ Ide Konten dengan AI</h2>
           </div>
-          <p class="text-xs text-neutral-400 mt-0.5">Buntu ide? Acak kombinasi konsep dan hook dari bank ide lokal. Konten bukan hasil AI.</p>
+          <p class="text-xs text-neutral-400 mt-0.5">Setiap klik meminta AI membuat ide baru sesuai kategori—bukan sekadar mengacak kombinasi template.</p>
         </div>
         <div class="flex items-center gap-2">
           <select id="ideaCategoryFilter" class="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-neutral-200 outline-none focus:border-amber-500">
@@ -227,7 +248,7 @@
             <option value="tutorial">Tips Editing & Hook</option>
           </select>
           <button onclick="rollRandomIdea()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/10 transition">
-            <span>🎲</span> Acak Ide
+            <span>✨</span> Buat Ide AI
           </button>
         </div>
       </div>
@@ -378,6 +399,20 @@
     </div>
   </footer>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="auth.js"></script>
+  <!-- Navigasi bawah (HP) -->
+  <nav class="md:hidden fixed inset-x-0 bottom-0 z-40 border-t border-neutral-800 bg-neutral-950" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Menu utama">
+    <div class="grid grid-cols-5 h-14 text-[10px] font-semibold">
+      <a href="/" class="flex flex-col items-center justify-center gap-0.5 text-amber-400"><span class="text-base">🏠</span>Beranda</a>
+      <a href="/video-generator" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">🎬</span>Video AI</a>
+      <a href="/story" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">📝</span>Story AI</a>
+      <a href="/chat" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">💬</span>Chat</a>
+      <button type="button" onclick="location.href='/video-generator#/akun'" class="flex flex-col items-center justify-center gap-0.5 text-neutral-400"><span class="text-base">👤</span>Akun</button>
+    </div>
+  </nav>
+
   <!-- Application Logic -->
   <script>
     function escapeHTML(value) {
@@ -498,6 +533,14 @@ Cinematic documentary screengrab, hyper-realistic, dramatic rim lighting, myster
         <div class="p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 leading-relaxed font-sans text-xs">
           ${formatted}
         </div>
+        <div class="mt-3 p-3 rounded-xl border border-neutral-800 bg-neutral-900 space-y-2">
+          <label for="voiceNameSelect" class="block text-xs font-semibold text-neutral-300">🔊 Suara AI untuk voice-over</label>
+          <select id="voiceNameSelect" class="w-full p-2 rounded-lg bg-neutral-950 border border-neutral-800 text-xs text-neutral-200"><option value="Kore">Kore — tegas</option><option value="Aoede">Aoede — lembut</option><option value="Charon">Charon — berat</option><option value="Fenrir">Fenrir — energik</option><option value="Puck">Puck — ceria</option></select>
+          <button type="button" onclick="generateVoiceAudio()" class="w-full rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs p-2">Buat & Unduh Audio Voice-over</button>
+          <p id="voiceStatus" class="text-[11px] text-neutral-400">Audio dibuat melalui Gemini TTS saat tombol ditekan. Fitur memerlukan model TTS yang tersedia di API.</p>
+          <audio id="voiceAudioPlayer" controls class="hidden w-full"></audio>
+          <a id="voiceDownloadLink" class="hidden text-xs text-amber-400 underline" download="kreatorhub-voiceover.wav">Unduh file audio</a>
+        </div>
       `;
     }
 
@@ -583,41 +626,36 @@ Cinematic documentary screengrab, hyper-realistic, dramatic rim lighting, myster
       }
     ];
 
-    // Expand bank to 1,000 distinct local idea combinations (not AI-generated).
-    (function expandIdeaBankTo1000() {
-      const settings = ['di kota yang ditinggalkan', 'di hutan berkabut', 'di stasiun luar angkasa', 'di desa terpencil', 'di pulau tanpa peta', 'di gedung bawah tanah', 'di masa depan', 'di kerajaan kuno', 'di laboratorium rahasia', 'di tengah badai'];
-      const twists = ['namun semua bukti menghilang saat fajar', 'hingga satu rekaman mengubah semuanya', 'tetapi tokoh utama menyimpan rahasia', 'sampai waktu mulai berjalan mundur', 'dan ternyata petunjuknya ada sejak awal', 'sebelum pesan terakhir datang', 'ketika orang yang dipercaya menghilang', 'saat aturan dunia mendadak berubah', 'namun akhir ceritanya tidak seperti dugaan', 'hingga pilihan terakhir menentukan nasib semua orang'];
-      const angles = ['Misteri', 'Eksperimen', 'Misi penyelamatan', 'Rahasia keluarga', 'Survival', 'Penemuan aneh', 'Konspirasi', 'Perjalanan waktu', 'Dunia paralel', 'Teknologi terlarang'];
-      const base = ideaDatabase.slice();
-      for (let n = 1; ideaDatabase.length < 1000; n++) {
-        const seed = base[(n - 1) % base.length];
-        const setting = settings[Math.floor((n - 1) / 10) % settings.length];
-        const twist = twists[(n - 1) % twists.length];
-        const angle = angles[Math.floor((n - 1) / 100) % angles.length];
-        ideaDatabase.push({
-          cat: seed.cat, tag: seed.tag,
-          hook: `"${angle} ${setting} #${String(n).padStart(3, '0')}: ${twist}."`,
-          synopsis: `${seed.synopsis} Latar: ${setting}; konflik berkembang ${twist}.`,
-          script: `"Bayangkan ${angle.toLowerCase()} ${setting}. ${twist}. Apa keputusan yang akan kamu ambil?"`
-        });
-      }
-    })();
+    // Ide baru dibuat oleh Gemini melalui endpoint server; bank kecil di atas hanya contoh awal.
+    const recentIdeas = [];
 
     let currentIdeaObj = ideaDatabase[0];
 
-    function rollRandomIdea() {
+    async function rollRandomIdea() {
+      const button = document.querySelector('#ideaCategoryFilter')?.parentElement?.querySelector('button');
       const cat = document.getElementById('ideaCategoryFilter').value;
-      const matches = cat === 'all' ? ideaDatabase : ideaDatabase.filter(i => i.cat === cat);
-      const pool = matches.length ? matches : ideaDatabase;
-      const chosen = pool[Math.floor(Math.random() * pool.length)];
-      currentIdeaObj = chosen;
-
-      document.getElementById('ideaTagDisplay').textContent = chosen.tag;
-      document.getElementById('ideaHookDisplay').textContent = chosen.hook;
-      document.getElementById('ideaSynopsisDisplay').textContent = chosen.synopsis;
-      document.getElementById('ideaScriptDisplay').textContent = chosen.script;
-
-      notify('Ide baru berhasil diacak!', '🎲');
+      const oldLabel = button ? button.innerHTML : '';
+      if (button) { button.disabled = true; button.innerHTML = '<span>⏳</span> Membuat ide…'; }
+      try {
+        const response = await fetch('/.netlify/functions/ideas', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category: cat, avoid: recentIdeas.slice(-8).join('\n') })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.idea) throw new Error(data.error || `Permintaan gagal (${response.status}).`);
+        const chosen = data.idea;
+        currentIdeaObj = chosen;
+        recentIdeas.push(chosen.hook);
+        document.getElementById('ideaTagDisplay').textContent = chosen.tag;
+        document.getElementById('ideaHookDisplay').textContent = chosen.hook;
+        document.getElementById('ideaSynopsisDisplay').textContent = chosen.synopsis;
+        document.getElementById('ideaScriptDisplay').textContent = chosen.script;
+        notify('Ide baru dibuat oleh AI!', '✨');
+      } catch (err) {
+        notify('Ide AI belum bisa dibuat: ' + (err.message || 'Coba lagi.'), '⚠️');
+      } finally {
+        if (button) { button.disabled = false; button.innerHTML = oldLabel; }
+      }
     }
 
     function copyCurrentIdea() {
@@ -923,6 +961,166 @@ Cinematic documentary screengrab, hyper-realistic, dramatic rim lighting, myster
       e.target.reset();
       notify('Resource baru berhasil ditambahkan!', '🚀');
       renderItems();
+    }
+
+    // --- 5. VIDEO UPLOAD + GEMINI VIDEO ANALYSIS ---
+    const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
+    const MAX_VIDEO_SECONDS = 305;
+    const VIDEO_CHUNK_BYTES = 2 * 1024 * 1024;
+    let activeVideoFileName = null;
+    let activeVideoObjectUrl = null;
+
+    function setVideoProgress(percent, message) {
+      document.getElementById('videoProgressBar').style.width = `${Math.max(0, Math.min(100, percent))}%`;
+      document.getElementById('videoProgressText').textContent = message;
+    }
+
+    function bytesToBase64(bytes) {
+      let binary = '';
+      const step = 0x8000;
+      for (let i = 0; i < bytes.length; i += step) binary += String.fromCharCode(...bytes.subarray(i, i + step));
+      return btoa(binary);
+    }
+
+    async function callVideoApi(payload) {
+      const response = await fetch('/.netlify/functions/video', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `Permintaan video gagal (${response.status}).`);
+      return data;
+    }
+
+    async function waitForVideoReady(fileName) {
+      for (let attempt = 0; attempt < 24; attempt++) {
+        const file = await callVideoApi({ action: 'verify', fileName });
+        if (file.state === 'ACTIVE') return file;
+        if (file.state === 'FAILED') throw new Error('Google gagal memproses file video.');
+        setVideoProgress(94, `Menunggu pemrosesan video Google (${attempt + 1}/24)...`);
+        await new Promise(resolve => setTimeout(resolve, 2500));
+      }
+      throw new Error('Pemrosesan video terlalu lama. Coba lagi nanti.');
+    }
+
+    async function handleAnalyzeVideo() {
+      const input = document.getElementById('videoFileInput');
+      const file = input.files && input.files[0];
+      const button = document.getElementById('btnAnalyzeVideo');
+      if (!file) { notify('Pilih video dulu, Bro.', '⚠️'); return; }
+      if (file.size > MAX_VIDEO_BYTES) { notify('Ukuran video maksimal 100 MiB.', '⚠️'); return; }
+      if (!['video/mp4', 'video/webm', 'video/quicktime'].includes(file.type)) { notify('Gunakan MP4, WebM, atau MOV.', '⚠️'); return; }
+      const metadata = document.createElement('video');
+      metadata.preload = 'metadata';
+      const duration = await new Promise(resolve => {
+        const timer = setTimeout(() => resolve(NaN), 10000);
+        metadata.onloadedmetadata = () => { clearTimeout(timer); resolve(metadata.duration); };
+        metadata.onerror = () => { clearTimeout(timer); resolve(NaN); };
+        metadata.src = URL.createObjectURL(file);
+      });
+      URL.revokeObjectURL(metadata.src);
+      if (!Number.isFinite(duration) || duration <= 0 || duration > MAX_VIDEO_SECONDS) { notify('Durasi video harus maksimal 5 menit.', '⚠️'); return; }
+
+      button.disabled = true;
+      let fileName = null;
+      let analysisSucceeded = false;
+      try {
+        setVideoProgress(1, 'Memulai upload aman...');
+        const session = await callVideoApi({ action: 'create-session', size: file.size, mimeType: file.type, displayName: file.name });
+        let offset = 0;
+        while (offset < file.size) {
+          const end = Math.min(offset + VIDEO_CHUNK_BYTES, file.size);
+          const bytes = new Uint8Array(await file.slice(offset, end).arrayBuffer());
+          const chunk = bytesToBase64(bytes);
+          const finalChunk = end === file.size;
+          const result = await callVideoApi({ action: 'upload-chunk', sessionUrl: session.sessionUrl, offset, chunkBase64: chunk, isFinal: finalChunk });
+          offset = end;
+          if (result.fileName) fileName = result.fileName;
+          setVideoProgress(Math.round(offset / file.size * 80), `Upload video: ${Math.round(offset / file.size * 100)}%`);
+        }
+        if (!fileName) throw new Error('Upload selesai tetapi Google belum memberikan ID file. Pilih ulang video lalu coba lagi.');
+        activeVideoFileName = fileName;
+        setVideoProgress(83, 'Memeriksa kesiapan video...');
+        await waitForVideoReady(fileName);
+        setVideoProgress(90, 'Gemini sedang menganalisis isi video...');
+        const result = await callVideoApi({ action: 'analyze', fileName, mode: document.getElementById('storyMode').value, extra: document.getElementById('videoExtraNotes').value });
+        renderStoryResult(result.text);
+        document.getElementById('storyStatusBadge').textContent = `Analisis video: ${result.model || 'Gemini'}`;
+        analysisSucceeded = true;
+        setVideoProgress(100, 'Analisis selesai. Mencoba meminta penghapusan file sementara...');
+        notify('Analisis video selesai!', '🎬');
+      } catch (error) {
+        setVideoProgress(0, error.message || 'Analisis gagal.');
+        notify(error.message || 'Analisis video gagal.', '⚠️');
+      } finally {
+        if (fileName) {
+          try {
+            await callVideoApi({ action: 'delete', fileName });
+            activeVideoFileName = null;
+            setVideoProgress(100, analysisSucceeded ? 'Analisis selesai; permintaan penghapusan file diterima oleh API Google.' : 'Permintaan penghapusan file diterima oleh API Google setelah proses gagal.');
+          } catch (_) {
+            activeVideoFileName = fileName;
+            try { localStorage.setItem('kreatorhub_pending_video_delete', fileName); } catch (_) {}
+            setVideoProgress(100, 'PENTING: penghapusan belum terkonfirmasi. Tekan tombol coba hapus lagi di bawah.');
+            const retry = document.createElement('button');
+            retry.type = 'button'; retry.className = 'w-full p-2 rounded-lg bg-red-700 text-white text-xs font-bold mt-2';
+            retry.textContent = 'Coba Hapus File Video Sementara';
+            retry.onclick = retryDeleteVideo;
+            document.getElementById('videoProgressText').appendChild(document.createElement('br'));
+            document.getElementById('videoProgressText').appendChild(retry);
+          }
+        }
+        button.disabled = false;
+      }
+    }
+
+    async function retryDeleteVideo() {
+      const name = activeVideoFileName || localStorage.getItem('kreatorhub_pending_video_delete');
+      if (!name) { notify('Tidak ada file tertunda untuk dihapus.', 'ℹ️'); return; }
+      try {
+        await callVideoApi({ action: 'delete', fileName: name });
+        activeVideoFileName = null;
+        localStorage.removeItem('kreatorhub_pending_video_delete');
+        setVideoProgress(100, 'Permintaan penghapusan file diterima oleh API Google.');
+        notify('Permintaan penghapusan dikirim.', '✅');
+      } catch (e) { notify(e.message || 'Penghapusan gagal, coba lagi.', '⚠️'); }
+    }
+
+    // Gemini TTS: return PCM and wrap it as WAV for common browser players.
+    function pcmToWav(base64, sampleRate = 24000, channels = 1, bitsPerSample = 16) {
+      const binary = atob(base64);
+      const pcm = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) pcm[i] = binary.charCodeAt(i);
+      const buffer = new ArrayBuffer(44 + pcm.length);
+      const view = new DataView(buffer);
+      const write = (offset, value) => { for (let i = 0; i < value.length; i++) view.setUint8(offset + i, value.charCodeAt(i)); };
+      write(0, 'RIFF'); view.setUint32(4, 36 + pcm.length, true); write(8, 'WAVE'); write(12, 'fmt ');
+      view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, channels, true);
+      view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * channels * bitsPerSample / 8, true);
+      view.setUint16(32, channels * bitsPerSample / 8, true); view.setUint16(34, bitsPerSample, true); write(36, 'data'); view.setUint32(40, pcm.length, true);
+      new Uint8Array(buffer, 44).set(pcm);
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    async function generateVoiceAudio() {
+      const status = document.getElementById('voiceStatus');
+      const player = document.getElementById('voiceAudioPlayer');
+      const link = document.getElementById('voiceDownloadLink');
+      const sourceText = latestGeneratedText.trim();
+      if (!sourceText || sourceText.startsWith('AI BELUM BISA DIAKSES')) { notify('Buat naskah yang berhasil dulu.', '⚠️'); return; }
+      const voiceName = document.getElementById('voiceNameSelect')?.value || 'Kore';
+      status.textContent = 'Gemini sedang membuat audio. Tunggu sebentar...';
+      try {
+        const response = await fetch('/.netlify/functions/voice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: sourceText.slice(0, 4000), voiceName }) });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || `Pembuatan audio gagal (${response.status}).`);
+        const wav = pcmToWav(data.audioBase64, 24000, 1, 16);
+        if (activeVideoObjectUrl) URL.revokeObjectURL(activeVideoObjectUrl);
+        activeVideoObjectUrl = URL.createObjectURL(wav);
+        player.src = activeVideoObjectUrl; player.classList.remove('hidden');
+        link.href = activeVideoObjectUrl; link.classList.remove('hidden'); link.download = 'kreatorhub-voiceover.wav';
+        status.textContent = `Audio dibuat (${data.model || 'Gemini TTS'}). Format WAV.`;
+        notify('Audio voice-over siap diputar dan diunduh.', '🔊');
+      } catch (error) { status.textContent = error.message || 'Pembuatan audio gagal.'; notify(status.textContent, '⚠️'); }
     }
 
     // Init
